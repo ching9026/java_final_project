@@ -1,59 +1,51 @@
-# Java 電影推薦與片單管理系統
+# Java 電影推薦與個人片單管理系統
 
-這是我大學學習 Java 時完成的期末專題，主要目標是練習 **Java GUI、API 串接、JSON 資料處理、資料庫操作與 Maven 專案管理**。
+> 大學 Java 程式設計課程期末專題
 
-專案以 **Java Swing** 製作桌面介面，透過 **TMDB API** 搜尋電影資訊，並使用 **MongoDB** 儲存不同使用者的個人片單。
+這是我大學時期學習 Java 所完成的期末專題，使用 **Java Swing** 建立桌面 GUI，串接 **TMDB (The Movie Database) API** 搜尋電影資訊，並透過 **MongoDB** 儲存不同使用者的個人電影片單。
 
-> 此專案為大學時期的 Java 學習作品，保留當時的程式設計方式與實作內容，主要用於展示 Java 基礎、GUI、API 與資料庫整合能力。
+這個專案主要用來練習 Java GUI、物件導向程式設計、HTTP API 串接、JSON 資料處理、MongoDB 資料庫操作，以及 Maven 專案建置。
 
 ---
 
 ## 專案功能
 
-### 1. 使用者登入
+### 電影搜尋
 
-使用者輸入名稱後登入系統，程式會以使用者名稱區分不同使用者的片單資料。
+使用者可以輸入演員名稱，程式會透過 TMDB API 搜尋該演員參與的電影。
 
-### 2. 電影搜尋
+搜尋結果可依照：
 
-可依照以下條件搜尋電影：
-
-- 國家 / 地區
+- 國家（Country）
 - 電影類型（Genre）
-- 演員名稱（Actor）
+- 演員（Actor）
 
-系統會透過 TMDB API 取得演員與電影資訊，並將搜尋結果顯示在 Java Swing 的表格中。
+進行篩選。
 
-### 3. 電影資訊顯示
+電影結果會顯示於 Java Swing 的 `JTable` 中，包括電影名稱、國家、類型與電影簡介。
 
-搜尋結果包含：
+### 個人電影片單
 
-- 電影名稱
-- 國家 / 地區
-- 電影類型
-- 電影簡介（Overview）
+使用者輸入名稱並登入後，可以：
 
-### 4. 加入個人片單
+- 將搜尋到的電影加入個人片單
+- 查看自己的電影片單
+- 查看電影詳細介紹（Overview）
+- 刪除自己的電影片單
 
-使用者可以將搜尋到的電影加入自己的片單。
+不同使用者的資料透過 `User_name` 欄位區分。
 
-系統會將以下資料寫入 MongoDB：
+### MongoDB 儲存
+
+加入片單的電影資料會儲存在 MongoDB，包括：
 
 ```text
-User Name
-Movie Title
+MovieTitle
 Country
 Genre
 Overview
+User_name
 ```
-
-### 5. 查看片單
-
-可查詢目前登入使用者已儲存的電影清單，並透過 GUI 查看每部電影的詳細介紹。
-
-### 6. 刪除片單
-
-可刪除目前使用者所建立的片單資料。
 
 ---
 
@@ -65,33 +57,16 @@ Overview
   ▼
 Java Swing GUI
   │
-  ├── 使用者名稱
-  ├── 國家篩選
-  ├── 電影類型篩選
-  └── 演員搜尋
-  │
-  ▼
-TMDB API
-  │
-  ├── Actor Search
-  ├── Movie Credits
-  ├── Genre List
-  └── Movie Details
-  │
-  ▼
-Gson JSON Parsing
-  │
-  ▼
-搜尋結果 JTable
-  │
-  └── Add to Database
-          │
+  ├───────────────┐
+  ▼               ▼
+TMDB API        MongoDB
+  │               │
+  ▼               ▼
+電影資料        個人電影片單
+  │               │
+  └───────┬───────┘
           ▼
-      MongoDB Atlas
-          │
-          ├── 儲存片單
-          ├── 查看片單
-          └── 刪除片單
+       Swing GUI
 ```
 
 ---
@@ -100,22 +75,15 @@ Gson JSON Parsing
 
 | 類別 | 技術 |
 |---|---|
-| 程式語言 | Java |
-| GUI | Java Swing / AWT |
-| API | TMDB API |
+| 程式語言 | Java 17 |
+| GUI | Java Swing |
+| Build Tool | Maven |
+| 電影資料 | TMDB API |
 | HTTP | `HttpURLConnection` |
-| JSON | Gson |
+| JSON | Gson 2.10.1 |
 | Database | MongoDB / MongoDB Atlas |
-| Build Tool | Apache Maven |
-| Java Version | Java 17 |
+| MongoDB Driver | mongo-java-driver 3.12.13 |
 | Testing | JUnit 4 |
-
-Maven 主要 dependency 包含：
-
-- Gson 2.10.1
-- MongoDB Java Driver 3.12.13
-- BSON 3.12.13
-- JUnit 4.11
 
 ---
 
@@ -124,214 +92,251 @@ Maven 主要 dependency 包含：
 ```text
 java_final_project/
 ├── README.md
-├── firstMaven-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+├── .gitignore
 └── firstMaven/
     ├── pom.xml
-    ├── src/
-    │   ├── main/
-    │   │   └── java/
-    │   │       └── ocean_university/
-    │   │           └── firstMaven/
-    │   │               ├── App.java
-    │   │               ├── ButtonColumn.java
-    │   │               └── MovieRecommendationSystem.java
-    │   └── test/
-    └── target/
+    └── src/
+        ├── main/java/ocean_university/firstMaven/
+        │   ├── App.java
+        │   ├── ButtonColumn.java
+        │   └── MovieRecommendationSystem.java
+        └── test/java/ocean_university/firstMaven/
+            └── AppTest.java
 ```
 
-### 主要程式
-
-#### `MovieRecommendationSystem.java`
-
-整個系統的主要 GUI 與商業邏輯，包括：
-
-- Swing 視窗與元件建立
-- 使用者登入
-- TMDB API 呼叫
-- 電影搜尋與條件篩選
-- JSON 解析
-- JTable 顯示搜尋結果
-- MongoDB 新增、查詢與刪除
-
-#### `ButtonColumn.java`
-
-讓 JTable 中的指定欄位可以顯示並操作按鈕，用來實作「Add to Database」功能。
-
-#### `pom.xml`
-
-負責 Maven dependency、Java 版本以及 JAR 打包設定。
+Maven 產生的 `target/`、`.class` 與 executable JAR 屬於 build artifacts，因此不再提交到 Git repository，可使用 Maven 重新產生。
 
 ---
 
-## 執行環境
+## 主要程式
+
+### `MovieRecommendationSystem.java`
+
+專案核心程式，負責：
+
+- 建立 Swing GUI
+- 使用者操作
+- TMDB API 呼叫
+- Actor / Country / Genre 搜尋與篩選
+- MongoDB 連線
+- 電影片單新增、讀取與刪除
+
+### `ButtonColumn.java`
+
+將按鈕加入 `JTable` 欄位，讓使用者可以直接把搜尋結果加入 MongoDB 電影片單。
+
+### `pom.xml`
+
+管理 Maven dependencies 與 build 設定，並設定：
+
+```text
+ocean_university.firstMaven.MovieRecommendationSystem
+```
+
+為 executable JAR 的 Main Class。
+
+---
+
+## 執行需求
 
 建議環境：
 
 ```text
-Java 17
+Java 17+
 Maven 3.x
-MongoDB Atlas / MongoDB
-Internet connection
+MongoDB / MongoDB Atlas
 TMDB API Key
 ```
 
-檢查 Java：
-
-```bash
-java -version
-```
-
-檢查 Maven：
-
-```bash
-mvn -version
-```
-
----
-
-## 建置方式
-
-Clone 專案：
+Clone Repository：
 
 ```bash
 git clone https://github.com/ching9026/java_final_project.git
 cd java_final_project/firstMaven
 ```
 
-使用 Maven 建置：
+---
+
+## API Key 與資料庫設定
+
+為避免將帳號、密碼或 API Key 提交到公開 GitHub，程式現在改為從 **環境變數**讀取設定。
+
+需要設定兩個環境變數：
+
+```text
+TMDB_API_KEY
+MONGODB_URI
+```
+
+其中：
+
+- `TMDB_API_KEY`：你自己的 TMDB API Key
+- `MONGODB_URI`：你自己的 MongoDB / MongoDB Atlas Connection String
+
+### Windows PowerShell
+
+```powershell
+$env:TMDB_API_KEY="YOUR_TMDB_API_KEY"
+$env:MONGODB_URI="YOUR_MONGODB_CONNECTION_STRING"
+```
+
+### Linux / macOS
+
+```bash
+export TMDB_API_KEY="YOUR_TMDB_API_KEY"
+export MONGODB_URI="YOUR_MONGODB_CONNECTION_STRING"
+```
+
+> 不要把真正的 API Key、MongoDB 帳號或密碼 commit 到 GitHub。
+
+---
+
+## Maven Build
+
+進入 Maven 專案：
+
+```bash
+cd firstMaven
+```
+
+安裝 dependency 並編譯：
 
 ```bash
 mvn clean package
 ```
 
-完成後 Maven 會在 `target/` 中產生 JAR。
+完成後 Maven 會重新建立：
+
+```text
+target/
+```
+
+並產生 executable JAR。
 
 ---
 
 ## 執行方式
 
-可以執行包含 dependencies 的 JAR：
+完成環境變數設定與 Maven Build 後，可執行：
 
 ```bash
 java -Dfile.encoding=UTF-8 -jar target/firstMaven-0.0.1-SNAPSHOT-jar-with-dependencies.jar
 ```
 
-也可以直接從 IDE 執行：
+也可以直接從 IntelliJ IDEA / Eclipse 執行：
 
 ```text
-ocean_university.firstMaven.MovieRecommendationSystem
+MovieRecommendationSystem.main()
 ```
 
 ---
 
-## API 與資料庫設定
-
-此專案需要兩個外部服務：
-
-### TMDB API
-
-需要申請 TMDB API Key：
-
-https://www.themoviedb.org/
-
-程式會使用 TMDB API 取得：
-
-- Country Configuration
-- Movie Genre List
-- Actor Search
-- Actor Movie Credits
-- Movie Details
-
-### MongoDB
-
-使用 MongoDB 儲存使用者片單。
-
-資料庫內容主要包含：
+## 操作流程
 
 ```text
-User_name
-MovieTitle
-Country
-Genre
-Overview
+啟動程式
+    │
+    ▼
+輸入 User Name
+    │
+    ▼
+Login
+    │
+    ▼
+選擇 Country / Genre
+    │
+    ▼
+輸入 Actor
+    │
+    ▼
+Search
+    │
+    ▼
+TMDB API
+    │
+    ▼
+顯示電影搜尋結果
+    │
+    ├── 查看電影資訊
+    │
+    └── Add to database
+             │
+             ▼
+          MongoDB
+             │
+             ▼
+        個人電影片單
 ```
 
 ---
 
-## 安全性提醒
+## 學習內容
 
-目前這份大學時期的原始程式碼中，仍可看到當時直接寫在程式裡的 API / Database connection 設定。
+這個專案是我在大學學習 Java 時完成的課程專題，主要練習：
 
-**公開 GitHub Repository 不應將 API Key、MongoDB 帳號密碼或 Connection String 直接寫在 Source Code 中。**
+- Java 基本語法
+- Object-Oriented Programming (OOP)
+- Class 與 Method 設計
+- Event-driven Programming
+- Java Swing GUI
+- JTable / JButton / JPanel / JFrame
+- HTTP Request
+- REST API 串接
+- JSON Parsing
+- Maven Dependency Management
+- MongoDB CRUD
+- 外部 API 與資料庫整合
 
-如果要重新執行或繼續維護此專案，建議：
+---
 
-1. 先更換（Rotate）舊的 TMDB API Key 與 MongoDB Atlas 密碼。
-2. 將敏感設定改為 Environment Variables。
-3. 不要將 `.env` 或實際 Credential 上傳到 GitHub。
+## 安全性整理
 
-例如未來可改為：
+早期課程版本曾直接將外部服務設定寫在程式碼中。現在 Repository 版本已改成透過環境變數取得：
 
 ```java
-String apiKey = System.getenv("TMDB_API_KEY");
-String mongoUri = System.getenv("MONGODB_URI");
+System.getenv("TMDB_API_KEY")
+System.getenv("MONGODB_URI")
 ```
 
----
+同時移除舊的編譯產物與含舊設定的測試 prototype。
 
-## 這個專案練習到的內容
-
-這份專題是我大學學習 Java 時，將多個基礎概念整合成一個完整應用的練習，包含：
-
-- Java OOP 與 Class 設計
-- Java Swing GUI
-- Event Listener / Event-Driven Programming
-- HTTP API 串接
-- URL Encoding
-- JSON parsing
-- JTable / TableModel
-- MongoDB CRUD
-- Maven Dependency Management
-- JAR Packaging
-- 第三方 Library 整合
-
-相較於只練習單一 Java 語法題目，這個專題讓我第一次實際將 **GUI、外部 API 與 Database** 串在同一個 Java Application 中。
+如果憑證曾經提交到公開 GitHub，即使最新版程式已經移除，**舊 Git commit history 仍可能保留原值**，因此應該到對應服務重新產生新的 API Key / Database Password，而不是繼續使用舊憑證。
 
 ---
 
-## 可以進一步改善的方向
+## 未來可改善方向
 
-如果重新整理這個專案，可以進一步改善：
+如果重新開發這個專案，可以進一步改善：
 
-- 將 TMDB API Key 與 MongoDB URI 移出原始碼
-- 將 API、Database、GUI 邏輯拆成不同 Class
-- 採用 MVC / Service Layer 架構
-- 使用較新的 MongoDB Java Driver
-- 使用 Java `HttpClient` 取代 `HttpURLConnection`
-- 增加例外處理與錯誤提示
-- 增加輸入資料驗證
-- 將 MongoDB 查詢限制為目前使用者，而不是先讀取全部資料再篩選
-- 增加片單單筆刪除功能
-- 增加電影海報與評分顯示
-- 增加 Unit Test / Integration Test
-- 移除 Git 中的 `target/` build artifacts
+- 使用 JavaFX 改善 UI
+- 將 TMDB API 邏輯抽成 Service Class
+- 將 MongoDB 操作抽成 Repository / DAO
+- 使用 DTO / Model Class 管理電影資料
+- 增加真正的 Authentication
+- 改善 Exception Handling
+- 使用非同步 API Request 避免 Swing UI Blocking
+- 加入 Unit Test
+- 加入電影海報圖片
+- 支援片單單筆刪除
+- 支援收藏、評分與推薦功能
 
 ---
 
 ## 專案定位
 
-這是一個 **Java 學習階段的課程期末專題**，並不是目前仍持續維護的 production application。
+這是我大學 Java 課程的期末學習專題，重點並不是建立 production-ready 的電影推薦服務，而是透過一個完整的小型應用程式，實際練習：
 
-保留此 Repository 的主要目的，是呈現從 Java 基礎語法逐步學習到：
+> **Java GUI + REST API + JSON + MongoDB + Maven**
 
-```text
-Java
-  → GUI
-  → API Integration
-  → JSON Processing
-  → Database
-  → Maven Build
-  → Executable JAR
-```
+並理解桌面應用程式如何與外部 Web API 以及 Database 整合。
 
-的完整學習歷程。
+---
+
+## 外部服務
+
+本專案使用：
+
+- [TMDB (The Movie Database)](https://www.themoviedb.org/)
+- [MongoDB](https://www.mongodb.com/)
+
+電影相關資料由 TMDB API 提供。
