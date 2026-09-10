@@ -9,7 +9,7 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <name>firstMaven</name>
-    <!-- FIXME change it to the project's website -->
+    <!-- Java 電影推薦與個人片單管理系統 -->
     <url>http://www.example.com</url>
 
     <properties>
